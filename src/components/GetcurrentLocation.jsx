@@ -3,6 +3,7 @@ import axios from 'axios';
 import apiKeys from './apiKey.js'
 // import loader from '../assets/WeatherIcons.gif'
 import natureCardImage from '../assets/nature.jpg'
+import Clock from './Clock.jsx';
 
 const dateBuilder = (d) => {
   const months = [
@@ -115,11 +116,22 @@ const GetcurrentLocation = () => {
   return (
     <>
     <div className='bg-[#1c1c1c] w-[70vw] h-[70vh] flex text-white'>
-      <div className='border border-red-400 w-[50%] bg-cover bg-center' style={{backgroundImage : `url(${natureCardImage})`}}>
-        <h2 className=''>{weatherData.city}</h2>
-        <h1>{weatherData.country}</h1>
+      <div className='w-[50%] bg-cover bg-center flex flex-col justify-between' style={{backgroundImage : `url(${natureCardImage})`}}>
+        <div className='mt-10 px-7 w-[68%]'>
+        <h2 className='text-8xl font-bold'>{weatherData.city}</h2>  
+        <h1 className='text-6xl font-bold uppercase'>{weatherData.country}</h1>
+        </div>
+        <div className='flex h-[20%] items-center justify-center'>
+          <div className=' w-[50%] flex flex-col items-center text-2xl'>
+              <Clock />
+              {dateBuilder(new Date())}
+          </div>
+          <div className='w-[50%] text-6xl font-bold flex items-center justify-center'>
+            {weatherData.temperatureC}°<span className='text-3xl'>C</span>
+          </div>
+        </div>
       </div>
-      <div className='border border-purple-700 w-[50%]'>
+      <div className=' w-[50%]'>
         this is forecast wala div 
       </div>
     </div>
