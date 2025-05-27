@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import apiKeys from './apiKey.js'
-// import loader from '../assets/WeatherIcons.gif'
+import loader from '../assets/WeatherIcons.gif'
 import natureCardImage from '../assets/nature.jpg'
 import Clock from './Clock.jsx';
+import ReactAnimatedWeather from 'react-animated-weather'
+import Forecast from './Forecast.jsx';
 
 const dateBuilder = (d) => {
   const months = [
@@ -20,11 +22,6 @@ const dateBuilder = (d) => {
   const year = d.getFullYear();
 
   return `${day}, ${date} ${month} ${year}`;
-};
-const defaults = {
-  color: "white",
-  size: 112,
-  animate: true,
 };
 
 const GetcurrentLocation = () => {
@@ -113,30 +110,44 @@ const GetcurrentLocation = () => {
 
       return()=>{ clearInterval(interval)}
     },[weatherData.latitude, weatherData.longitude]);
-  return (
-    <>
-    <div className='bg-[#1c1c1c] w-[70vw] h-[70vh] flex text-white'>
-      <div className='w-[50%] bg-cover bg-center flex flex-col justify-between' style={{backgroundImage : `url(${natureCardImage})`}}>
-        <div className='mt-10 px-7 w-[68%]'>
-        <h2 className='text-8xl font-bold'>{weatherData.city}</h2>  
-        <h1 className='text-6xl font-bold uppercase'>{weatherData.country}</h1>
-        </div>
-        <div className='flex h-[20%] items-center justify-center'>
-          <div className=' w-[50%] flex flex-col items-center text-2xl'>
-              <Clock />
-              {dateBuilder(new Date())}
-          </div>
-          <div className='w-[50%] text-6xl font-bold flex items-center justify-center'>
-            {weatherData.temperatureC}°<span className='text-3xl'>C</span>
-          </div>
-        </div>
+  return weatherData.temperatureC ? (
+  <div className="flex flex-col md:flex-row w-[90vw] max-w-6xl mx-auto my-10 rounded-xl overflow-hidden shadow-2xl border border-gray-700 bg-gray-900 text-white">
+    <div
+      className="md:w-1/2 bg-cover bg-center flex flex-col justify-between p-8"
+      style={{ backgroundImage: `url(${natureCardImage})` }}
+    >
+      <div>
+        <h2 className="text-5xl md:text-6xl font-bold">{weatherData.city}</h2>
+        <h1 className="text-3xl md:text-4xl uppercase tracking-wider text-gray-200">{weatherData.country}</h1>
       </div>
-      <div className=' w-[50%]'>
-        this is forecast wala div 
+
+      <div className="flex justify-between items-center mt-10">
+        <div className="text-lg md:text-xl">
+          <Clock />
+          <div>{dateBuilder(new Date())}</div>
+        </div>
+        <div className="text-6xl font-bold">
+          {weatherData.temperatureC}°<span className="text-2xl">C</span>
+        </div>
       </div>
     </div>
-    </>
-  )
+
+    <div className="md:w-1/2  bg-gradient-to-br from-blue-800 to-indigo-900 p-6 md:p-10 flex flex-col justify-center items-center">
+      <Forecast icon={weatherData.icon} weather={weatherData.main} />
+    </div>
+  </div>
+) : (
+  <div className="flex flex-col items-center justify-center min-h-screen text-white text-center space-y-4 bg-[#1c1c1c]">
+    <img
+      src={loader}
+      alt="loading..."
+      className="w-1/3 pointer-events-none select-none animate-pulse"
+    />
+    <h3 className="text-xl font-semibold">Detecting your location</h3>
+    <h3 className="text-md text-gray-400">Your current location will be used for real-time weather.</h3>
+  </div>
+);
+
 }
 
 export default GetcurrentLocation
